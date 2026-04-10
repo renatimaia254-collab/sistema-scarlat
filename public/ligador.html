@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Ligador - Sistema Scarlat</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .dashboard { max-width: 1200px; margin: 0 auto; display: flex; gap: 20px; flex-wrap: wrap; }
         .form-col, .fila-col { flex: 1; min-width: 280px; }
@@ -14,31 +13,27 @@
         .header { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 20px; text-align: center; }
         .header-fila { background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%); color: white; padding: 20px; text-align: center; }
         .logo { font-size: 48px; }
-        .header h1, .header-fila h1 { font-size: clamp(18px, 5vw, 24px); }
         .form-body { padding: 20px; }
         .form-group { margin-bottom: 15px; }
         label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 14px; color: #333; }
-        input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 14px; font-size: 16px; -webkit-appearance: none; }
+        input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 14px; font-size: 16px; }
         input:focus { outline: none; border-color: #CC092F; }
-        button { width: 100%; background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-        button:active { transform: scale(0.98); }
+        button { width: 100%; background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .status-fila { background: #f8f9fa; padding: 16px; border-radius: 20px; margin-bottom: 16px; }
         .stats { display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; }
-        .stat-box { text-align: center; flex: 1; padding: 12px; background: white; border-radius: 16px; min-width: 80px; }
+        .stat-box { text-align: center; flex: 1; padding: 12px; background: white; border-radius: 16px; }
         .stat-number { font-size: 28px; font-weight: bold; color: #CC092F; }
         .stat-label { font-size: 11px; color: #666; }
         .proximo-card { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 16px; border-radius: 16px; margin-top: 16px; }
-        .proximo-card .nome { font-size: 18px; font-weight: bold; word-break: break-word; }
-        .lista-fila { max-height: 350px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .proximo-card .nome { font-size: 18px; font-weight: bold; }
+        .lista-fila { max-height: 350px; overflow-y: auto; }
         .lista-encerrados { margin-top: 20px; border-top: 2px solid #ddd; padding-top: 15px; }
         .fila-item-ligador { background: white; border-left: 4px solid #CC092F; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; }
         .fila-item-encerrado { background: #f0f0f0; border-left: 4px solid #27ae60; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; opacity: 0.8; }
         .posicao { display: inline-block; width: 28px; height: 28px; background: #CC092F; color: white; border-radius: 50%; text-align: center; line-height: 28px; font-size: 12px; font-weight: bold; margin-right: 10px; }
-        .toast { position: fixed; bottom: 20px; right: 20px; left: 20px; background: #27ae60; color: white; padding: 12px 20px; border-radius: 12px; text-align: center; z-index: 9999; animation: slideIn 0.3s; }
-        @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #27ae60; color: white; padding: 12px; border-radius: 12px; text-align: center; z-index: 9999; }
         .status-online { position: fixed; top: 10px; right: 10px; background: #27ae60; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; z-index: 1000; }
-        @media (max-width: 768px) { body { padding: 10px; } .dashboard { gap: 10px; } .stat-number { font-size: 22px; } .proximo-card .nome { font-size: 16px; } }
-        @media (max-width: 480px) { .stats { gap: 8px; } .stat-box { padding: 8px; } .stat-number { font-size: 18px; } }
+        @media (max-width: 768px) { body { padding: 10px; } .stat-number { font-size: 22px; } }
     </style>
 </head>
 <body>
@@ -50,12 +45,12 @@
                 <div class="form-body">
                     <form id="formLigador">
                         <div class="form-group"><label>👤 Nome do Cliente *</label><input type="text" id="nomeCliente" required placeholder="Digite o nome"></div>
-                        <div class="form-group"><label>📱 Telefone do Cliente *</label><input type="tel" id="telefoneCliente" required placeholder="(11) 99999-9999" inputmode="numeric"></div>
+                        <div class="form-group"><label>📱 Telefone do Cliente *</label><input type="tel" id="telefoneCliente" required placeholder="(11) 99999-9999"></div>
                         <div class="form-group"><label>📋 Assunto *</label><input type="text" id="assunto" required placeholder="Motivo do atendimento"></div>
                         <div class="form-group"><label>👩‍💼 Nome da Gerente</label><input type="text" id="nomeGerente" value="Scarlat"></div>
                         <div class="form-group"><label>📅 Data e Horário *</label><input type="datetime-local" id="horarioAgendado" required></div>
                         <div class="form-group"><label>🏷️ Seu Vulgo *</label><input type="text" id="vulgo" required placeholder="Seu apelido"></div>
-                        <div class="form-group"><label>💬 Seu WhatsApp *</label><input type="tel" id="zap" required placeholder="11999999999" inputmode="numeric"></div>
+                        <div class="form-group"><label>💬 Seu WhatsApp *</label><input type="tel" id="zap" required placeholder="11999999999"></div>
                         <button type="submit">📨 AGENDAR CLIENTE</button>
                     </form>
                 </div>
@@ -84,13 +79,6 @@
         async function carregarDados() {
             try { const response = await fetch('/api/fichas'); fichas = await response.json(); renderizarStatusFila(); } 
             catch (error) { console.error('Erro:', error); }
-        }
-
-        function formatarTelefone(telefone) {
-            let tel = (telefone || '').replace(/\D/g, '');
-            if (tel.length === 11) return `(${tel.substring(0,2)}) ${tel.substring(2,7)}-${tel.substring(7,11)}`;
-            if (tel.length === 10) return `(${tel.substring(0,2)}) ${tel.substring(2,6)}-${tel.substring(6,10)}`;
-            return telefone || 'Não informado';
         }
 
         function renderizarStatusFila() {
