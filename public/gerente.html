@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Painel Scarlat - Gerente Master</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        .login-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
+        .login-card { background: white; padding: 30px; border-radius: 28px; text-align: center; width: 100%; max-width: 400px; }
+        .login-card h2 { color: #CC092F; margin-bottom: 20px; font-size: clamp(20px, 6vw, 28px); }
+        .login-card input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #e0e0e0; border-radius: 14px; font-size: 16px; }
+        .login-card button { width: 100%; background: #CC092F; color: white; padding: 14px; border: none; border-radius: 14px; font-size: 16px; cursor: pointer; }
+        
+        .main-content { display: none; }
+        .bradesco-header { background-color: #CC092F; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .bradesco-header h1 { font-size: clamp(16px, 5vw, 22px); }
+        .btn-sair { background: #ffffff30; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 10px; cursor: pointer; }
+        
+        .status-online { position: fixed; top: 10px; right: 10px; background: #27ae60; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; z-index: 1000; }
+        .container { max-width: 1600px; margin: 16px auto; padding: 16px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background-color: #CC092F; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 12px; font-size: 14px; }
+        .tab-btn.active { background-color: #8B0620; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .filtro-data { background: #f8f9fa; padding: 15px; border-radius: 16px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .filtro-data input { padding: 12px; border: 1px solid #ccc; border-radius: 12px; flex: 1; min-width: 150px; }
+        .filtro-data button { background-color: #CC092F; color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; }
+        
+        .agenda-dia { margin-bottom: 20px; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; }
+        .dia-header { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 14px 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 14px; }
+        .dia-header-finalizados { background: linear-gradient(135deg, #666 0%, #444 100%); color: white; padding: 14px 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .dia-fichas { padding: 12px; background: #fafafa; }
+        
+        .fila-item { background-color: white; border-left: 6px solid #CC092F; padding: 12px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .status-aguardando { color: #e67e22; font-weight: bold; background: #fff3e0; padding: 2px 8px; border-radius: 12px; display: inline-block; font-size: 12px; }
+        .status-em_andamento { color: #2980b9; font-weight: bold; background: #e3f2fd; padding: 2px 8px; border-radius: 12px; display: inline-block; font-size: 12px; }
+        .status-encerrado { color: #27ae60; font-weight: bold; background: #e8f5e9; padding: 2px 8px; border-radius: 12px; display: inline-block; font-size: 12px; }
+        .badge-horario { background: #CC092F; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 8px; display: inline-block; }
+        
+        button { background-color: #CC092F; color: white; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; margin-top: 8px; margin-right: 8px; font-size: 13px; }
+        .btn-ligar { background-color: #25D366; }
+        .btn-ligar:active { background-color: #128C7E; }
+        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 12px; margin-top: 8px; font-family: inherit; font-size: 14px; }
+        
+        .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #27ae60; color: white; padding: 12px; border-radius: 12px; text-align: center; z-index: 2000; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .relatorio-card { background: #f4f4f4; padding: 15px; margin-bottom: 15px; border-radius: 16px; overflow-x: auto; }
+        .relatorio-card table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 500px; }
+        .relatorio-card th, .relatorio-card td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+        .relatorio-card th { background-color: #CC092F; color: white; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .filtro-data { flex-direction: column; align-items: stretch; }
+            .filtro-data input { width: 100%; }
+            .filtro-data button { width: 100%; }
+            .dia-header, .dia-header-finalizados { flex-direction: column; text-align: center; }
+            button { padding: 10px 12px; font-size: 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .bradesco-header { flex-direction: column; text-align: center; }
+            .fila-item { padding: 10px; }
+            .badge-horario { display: inline-block; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginScreen" class="login-container">
+        <div class="login-card"><h2>👑 Área da Gerente Master</h2><p style="color:#666; margin-bottom:20px;">Acesso restrito à Scarlat</p>
+        <input type="password" id="senhaInput" placeholder="Digite a senha"><button onclick="fazerLogin()">Entrar no Painel</button></div>
+    </div>
+    <div id="mainContent" class="main-content">
+        <div class="bradesco-header"><h1>👑 Painel da Gerente Master Scarlat</h1><button class="btn-sair" onclick="fazerLogoff()">🚪 SAIR</button></div>
+        <div id="statusIndicator" class="status-online">🟢 Conectado</div>
+        <div class="container">
+            <div class="tabs"><button class="tab-btn active" onclick="switchTab('fila')">📋 FILA</button><button class="tab-btn" onclick="switchTab('relatorio')">📊 RELATÓRIO</button></div>
+            <div id="tab-fila" class="tab-content active">
+                <div class="filtro-data"><label>🔍 Filtrar por data:</label><input type="date" id="filtroData"><button onclick="filtrarPorData()">Filtrar</button><button onclick="limparFiltro()">Limpar</button></div>
+                <div id="filaLista"></div>
+            </div>
+            <div id="tab-relatorio" class="tab-content"><div id="relatorioLista"></div></div>
+        </div>
+    </div>
+    <script>
+        let fichas = [], eventSource = null, dataFiltro = null, observacoesTemp = {};
+        const SENHA_CORRETA = "Scarlat2026";
+
+        function tocarBuzinaForte() {
+            try { const AudioContext = window.AudioContext || window.webkitAudioContext; const ctx = new AudioContext();
+            const osc1 = ctx.createOscillator(), gain1 = ctx.createGain(); osc1.connect(gain1); gain1.connect(ctx.destination);
+            osc1.type = 'sawtooth'; osc1.frequency.value = 180; gain1.gain.value = 0.6; osc1.start();
+            const osc2 = ctx.createOscillator(), gain2 = ctx.createGain(); osc2.connect(gain2); gain2.connect(ctx.destination);
+            osc2.type = 'square'; osc2.frequency.value = 360; gain2.gain.value = 0.4; osc2.start();
+            gain1.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+            gain2.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+            osc1.stop(ctx.currentTime + 0.5); osc2.stop(ctx.currentTime + 0.5);
+            setTimeout(() => { const ctx2 = new AudioContext(); const osc3 = ctx2.createOscillator(), gain3 = ctx2.createGain();
+            osc3.connect(gain3); gain3.connect(ctx2.destination); osc3.type = 'sawtooth'; osc3.frequency.value = 200; gain3.gain.value = 0.5;
+            osc3.start(); gain3.gain.exponentialRampToValueAtTime(0.00001, ctx2.currentTime + 0.4); osc3.stop(ctx2.currentTime + 0.4); }, 200);
+            } catch(e) { console.log("Erro audio"); }
+        }
+
+        function fazerLogin() { const senha = document.getElementById('senhaInput').value; if (senha === SENHA_CORRETA) { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('mainContent').style.display = 'block'; iniciarSistema(); } else { alert('❌ Senha incorreta!'); } }
+        function fazerLogoff() { document.getElementById('loginScreen').style.display = 'flex'; document.getElementById('mainContent').style.display = 'none'; if (eventSource) eventSource.close(); }
+        function iniciarSistema() { connectSSE(); carregarDados(); setInterval(() => carregarDados(), 5000); }
+        
+        function connectSSE() {
+            if (eventSource) eventSource.close();
+            eventSource = new EventSource('/api/events');
+            eventSource.onopen = () => { document.getElementById('statusIndicator').innerHTML = '🟢 Tempo Real'; document.getElementById('statusIndicator').style.background = '#27ae60'; };
+            eventSource.addEventListener('nova-ficha', (e) => { tocarBuzinaForte(); showToast('📣 NOVO CLIENTE!'); carregarDados(); });
+            eventSource.addEventListener('status-alterado', () => carregarDados());
+            eventSource.addEventListener('ficha-excluida', () => carregarDados());
+            eventSource.onerror = () => { document.getElementById('statusIndicator').innerHTML = '🔴 Desconectado'; document.getElementById('statusIndicator').style.background = '#e74c3c'; setTimeout(connectSSE, 3000); };
+        }
+
+        function showToast(msg) { const toast = document.createElement('div'); toast.className = 'toast'; toast.innerHTML = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 3000); }
+        async function carregarDados() { try { const response = await fetch('/api/fichas'); fichas = await response.json(); renderizarFilaGerente(); renderizarRelatorio(); } catch (error) { console.error('Erro:', error); } }
+        
+        function formatarTelefone(telefone) { let tel = (telefone || '').replace(/\D/g, ''); if (tel.length === 11) return `(${tel.substring(0,2)}) ${tel.substring(2,7)}-${tel.substring(7,11)}`; if (tel.length === 10) return `(${tel.substring(0,2)}) ${tel.substring(2,6)}-${tel.substring(6,10)}`; return telefone || 'Não informado'; }
+        
+        function abrirWhatsApp(telefone) {
+            let tel = (telefone || '').replace(/\D/g, '');
+            if (tel.length === 11 || tel.length === 10) {
+                let numeroWhats = tel;
+                if (numeroWhats.length === 10) { numeroWhats = numeroWhats.substring(0,2) + '9' + numeroWhats.substring(2); }
+                const url = `https://web.whatsapp.com/send?phone=55${numeroWhats}&text=&app_absent=0`;
+                window.open(url, '_blank');
+                showToast(`📱 Abrindo WhatsApp para ${formatarTelefone(telefone)}`);
+            } else { showToast('⚠️ Telefone inválido'); }
+        }
+
+        function renderizarFilaGerente() {
+            const container = document.getElementById('filaLista'); if (!container) return;
+            let fichasFiltradas = fichas; if (dataFiltro) fichasFiltradas = fichas.filter(f => f.horarioAgendado.startsWith(dataFiltro));
+            const naoEncerrados = fichasFiltradas.filter(f => f.status !== 'encerrado'); const encerrados = fichasFiltradas.filter(f => f.status === 'encerrado');
+            if (naoEncerrados.length === 0 && encerrados.length === 0) { container.innerHTML = '<p>✅ Nenhum agendamento encontrado.</p>'; return; }
+            container.innerHTML = '';
+            if (dataFiltro) {
+                if (naoEncerrados.length > 0) { const div = document.createElement('div'); div.className = 'agenda-dia'; div.innerHTML = `<div class="dia-header">📅 ${formatarDataBR(dataFiltro)} - PENDENTES (${naoEncerrados.length})</div><div class="dia-fichas" id="pendentes-container"></div>`; container.appendChild(div); naoEncerrados.sort((a,b) => new Date(a.horarioAgendado) - new Date(b.horarioAgendado)).forEach(f => document.getElementById('pendentes-container').appendChild(criarCardFicha(f))); }
+                if (encerrados.length > 0) { const div = document.createElement('div'); div.className = 'agenda-dia'; div.innerHTML = `<div class="dia-header-finalizados">✅ ${formatarDataBR(dataFiltro)} - FINALIZADOS (${encerrados.length})</div><div class="dia-fichas" id="encerrados-container"></div>`; container.appendChild(div); encerrados.forEach(f => document.getElementById('encerrados-container').appendChild(criarCardFicha(f))); }
+            } else {
+                const grupos = {}; fichasFiltradas.forEach(f => { const data = f.horarioAgendado.split('T')[0]; if (!grupos[data]) grupos[data] = []; grupos[data].push(f); });
+                Object.keys(grupos).sort().forEach(data => { const pendentes = grupos[data].filter(f => f.status !== 'encerrado'); const finalizados = grupos[data].filter(f => f.status === 'encerrado');
+                const div = document.createElement('div'); div.className = 'agenda-dia'; div.innerHTML = `<div class="dia-header" onclick="toggleDia('dia-${data}')">📅 ${formatarDataBR(data)} <span>🟡 ${pendentes.length} | ✅ ${finalizados.length}</span></div><div class="dia-fichas" id="dia-${data}"><div id="pendentes-${data}"></div><div id="finalizados-${data}"></div></div>`;
+                if (pendentes.length) { const titulo = document.createElement('h4'); titulo.style.cssText = 'color:#e67e22; margin:10px 0 5px; font-size:14px'; titulo.innerHTML = '🟡 AGUARDANDO / EM ANDAMENTO'; div.querySelector(`#pendentes-${data}`).appendChild(titulo); pendentes.forEach(f => div.querySelector(`#pendentes-${data}`).appendChild(criarCardFicha(f))); }
+                if (finalizados.length) { const titulo = document.createElement('h4'); titulo.style.cssText = 'color:#27ae60; margin:10px 0 5px; font-size:14px'; titulo.innerHTML = '✅ FINALIZADOS'; div.querySelector(`#finalizados-${data}`).appendChild(titulo); finalizados.forEach(f => div.querySelector(`#finalizados-${data}`).appendChild(criarCardFicha(f))); }
+                container.appendChild(div); });
+            }
+        }
+
+        function criarCardFicha(ficha) {
+            const div = document.createElement('div'); div.className = 'fila-item'; div.setAttribute('data-id', ficha.id);
+            const horarioObj = new Date(ficha.horarioAgendado); const horaStr = horarioObj.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }); const dataStr = horarioObj.toLocaleDateString('pt-BR');
+            let statusText = ''; if (ficha.status === 'aguardando') statusText = '<span class="status-aguardando">🟡 Aguardando</span>'; else if (ficha.status === 'em_andamento') statusText = '<span class="status-em_andamento">🔵 Em andamento</span>'; else if (ficha.status === 'encerrado') statusText = '<span class="status-encerrado">✅ Encerrado</span>';
+            const obsSalva = observacoesTemp[ficha.id] || ficha.observacao || '';
+            div.innerHTML = `<div><strong>👤 ${ficha.nomeCliente}</strong> <span class="badge-horario">📅 ${dataStr} ${horaStr}</span><br>📱 ${formatarTelefone(ficha.telefoneCliente)}<br>📋 ${ficha.assunto}<br>📞 Ligador: ${ficha.vulgo}<br>Status: ${statusText}${ficha.observacao ? `<br>📝 ${ficha.observacao}` : ''}</div>
+            <div><button class="btn-ligar" onclick="abrirWhatsApp('${ficha.telefoneCliente || ''}')">📞 LIGAR</button>
+            ${ficha.status === 'aguardando' ? `<button onclick="iniciarAtendimento(${ficha.id})">🎯 Iniciar</button>` : ''}
+            ${ficha.status === 'em_andamento' ? `<textarea id="obs_${ficha.id}" placeholder="Resumo do atendimento..." rows="2">${obsSalva}</textarea><button onclick="encerrarAtendimento(${ficha.id})">✅ Encerrar</button>` : ''}
+            <button onclick="excluirFicha(${ficha.id})" style="background:#e74c3c">🗑️ EXCLUIR</button></div>`;
+            if (ficha.status === 'em_andamento') { const textarea = div.querySelector(`#obs_${ficha.id}`); if (textarea) { textarea.addEventListener('input', function() { observacoesTemp[ficha.id] = this.value; }); } }
+            return div;
+        }
+
+        function formatarDataBR(dataISO) { const [ano, mes, dia] = dataISO.split('-'); return `${dia}/${mes}/${ano}`; }
+        window.toggleDia = function(id) { const el = document.getElementById(id); if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none'; };
+        window.filtrarPorData = function() { const data = document.getElementById('filtroData').value; if (data) { dataFiltro = data; renderizarFilaGerente(); } };
+        window.limparFiltro = function() { dataFiltro = null; document.getElementById('filtroData').value = ''; renderizarFilaGerente(); };
+        window.iniciarAtendimento = async function(id) { try { const response = await fetch(`/api/fichas/${id}/iniciar`, { method: 'PUT' }); if (!response.ok) { const error = await response.json(); showToast(`⚠️ ${error.error}`); } else { showToast('✅ Atendimento iniciado'); } } catch (error) { showToast('❌ Erro'); } };
+        window.encerrarAtendimento = async function(id) { const observacao = observacoesTemp[id] || ''; if (!observacao.trim()) { showToast('⚠️ Preencha a observação!'); return; } try { await fetch(`/api/fichas/${id}/encerrar`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacao }) }); delete observacoesTemp[id]; showToast('✅ Atendimento encerrado'); } catch (error) { showToast('❌ Erro'); } };
+        window.excluirFicha = async function(id) { if (!confirm('⚠️ Excluir permanentemente?')) return; try { await fetch(`/api/fichas/${id}`, { method: 'DELETE' }); showToast('🗑️ Ficha excluída'); carregarDados(); } catch (error) { showToast('❌ Erro'); } };
+        
+        async function renderizarRelatorio() {
+            const container = document.getElementById('relatorioLista'); if (!container) return;
+            try { const response = await fetch('/api/relatorio'); const data = await response.json(); if (!data || data.length === 0) { container.innerHTML = '<p>Nenhum ligador cadastrado.</p>'; return; }
+            container.innerHTML = ''; for (const ligador of data) { const card = document.createElement('div'); card.className = 'relatorio-card'; let fichasHtml = '';
+            if (ligador.fichas) { const fichasArray = ligador.fichas.split(','); fichasHtml = '<table><th>Cliente</th><th>Telefone</th><th>Assunto</th><th>Status</th><th>Observação</th></tr>';
+            fichasArray.forEach(f => { const partes = f.split('|'); fichasHtml += `<tr><td>${partes[0] || '-'}</td><td>${formatarTelefone(partes[1])}</td><td>${partes[2] || '-'}</td><td>${partes[3] || '-'}</td><td>${partes[4] || '-'}</td></tr>`; }); fichasHtml += '</table>'; }
+            card.innerHTML = `<h3>📞 Ligador: ${ligador.vulgo} (${ligador.zap})</h3><p><strong>Total: ${ligador.total} fichas</strong></p>${fichasHtml}`; container.appendChild(card); } } catch (error) { console.error(error); } }
+        
+        function switchTab(tab) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); if (tab === 'fila') { document.getElementById('tab-fila').classList.add('active'); document.querySelector('.tab-btn:first-child').classList.add('active'); renderizarFilaGerente(); } else { document.getElementById('tab-relatorio').classList.add('active'); document.querySelector('.tab-btn:last-child').classList.add('active'); renderizarRelatorio(); } }
+        window.switchTab = switchTab; window.abrirWhatsApp = abrirWhatsApp;
+    </script>
+</body>
+</html>
