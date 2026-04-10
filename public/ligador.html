@@ -4,250 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Ligador - Sistema Scarlat</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        .dashboard {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .form-col, .fila-col {
-            flex: 1;
-            min-width: 280px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .header {
-            background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .header-fila {
-            background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 48px;
-        }
-
-        .header h1, .header-fila h1 {
-            font-size: clamp(18px, 5vw, 24px);
-        }
-
-        .form-body {
-            padding: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 14px;
-            font-size: 16px;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #CC092F;
-        }
-
-        button {
-            width: 100%;
-            background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .status-fila {
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 20px;
-            margin-bottom: 16px;
-        }
-
-        .stats {
-            display: flex;
-            gap: 12px;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-
-        .stat-box {
-            text-align: center;
-            flex: 1;
-            padding: 12px;
-            background: white;
-            border-radius: 16px;
-            min-width: 80px;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #CC092F;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: #666;
-        }
-
-        .proximo-card {
-            background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%);
-            color: white;
-            padding: 16px;
-            border-radius: 16px;
-            margin-top: 16px;
-        }
-
-        .proximo-card .nome {
-            font-size: 18px;
-            font-weight: bold;
-            word-break: break-word;
-        }
-
-        .lista-fila {
-            max-height: 350px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .lista-encerrados {
-            margin-top: 20px;
-            border-top: 2px solid #ddd;
-            padding-top: 15px;
-        }
-
-        .fila-item-ligador {
-            background: white;
-            border-left: 4px solid #CC092F;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            font-size: 13px;
-        }
-
-        .fila-item-encerrado {
-            background: #f0f0f0;
-            border-left: 4px solid #27ae60;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            font-size: 13px;
-            opacity: 0.8;
-        }
-
-        .posicao {
-            display: inline-block;
-            width: 28px;
-            height: 28px;
-            background: #CC092F;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 28px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            left: 20px;
-            background: #27ae60;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            text-align: center;
-            z-index: 9999;
-            animation: slideIn 0.3s;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .status-online {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #27ae60;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            z-index: 1000;
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .dashboard { gap: 10px; }
-            .stat-number { font-size: 22px; }
-            .proximo-card .nome { font-size: 16px; }
-        }
-
-        @media (max-width: 480px) {
-            .stats { gap: 8px; }
-            .stat-box { padding: 8px; }
-            .stat-number { font-size: 18px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .dashboard { max-width: 1200px; margin: 0 auto; display: flex; gap: 20px; flex-wrap: wrap; }
+        .form-col, .fila-col { flex: 1; min-width: 280px; }
+        .card { background: white; border-radius: 28px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .header { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 20px; text-align: center; }
+        .header-fila { background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%); color: white; padding: 20px; text-align: center; }
+        .logo { font-size: 48px; }
+        .header h1, .header-fila h1 { font-size: clamp(18px, 5vw, 24px); }
+        .form-body { padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 14px; color: #333; }
+        input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 14px; font-size: 16px; -webkit-appearance: none; }
+        input:focus { outline: none; border-color: #CC092F; }
+        button { width: 100%; background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        button:active { transform: scale(0.98); }
+        .status-fila { background: #f8f9fa; padding: 16px; border-radius: 20px; margin-bottom: 16px; }
+        .stats { display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; }
+        .stat-box { text-align: center; flex: 1; padding: 12px; background: white; border-radius: 16px; min-width: 80px; }
+        .stat-number { font-size: 28px; font-weight: bold; color: #CC092F; }
+        .stat-label { font-size: 11px; color: #666; }
+        .proximo-card { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 16px; border-radius: 16px; margin-top: 16px; }
+        .proximo-card .nome { font-size: 18px; font-weight: bold; word-break: break-word; }
+        .lista-fila { max-height: 350px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .lista-encerrados { margin-top: 20px; border-top: 2px solid #ddd; padding-top: 15px; }
+        .fila-item-ligador { background: white; border-left: 4px solid #CC092F; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; }
+        .fila-item-encerrado { background: #f0f0f0; border-left: 4px solid #27ae60; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; opacity: 0.8; }
+        .posicao { display: inline-block; width: 28px; height: 28px; background: #CC092F; color: white; border-radius: 50%; text-align: center; line-height: 28px; font-size: 12px; font-weight: bold; margin-right: 10px; }
+        .toast { position: fixed; bottom: 20px; right: 20px; left: 20px; background: #27ae60; color: white; padding: 12px 20px; border-radius: 12px; text-align: center; z-index: 9999; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .status-online { position: fixed; top: 10px; right: 10px; background: #27ae60; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; z-index: 1000; }
+        @media (max-width: 768px) { body { padding: 10px; } .dashboard { gap: 10px; } .stat-number { font-size: 22px; } .proximo-card .nome { font-size: 16px; } }
+        @media (max-width: 480px) { .stats { gap: 8px; } .stat-box { padding: 8px; } .stat-number { font-size: 18px; } }
     </style>
 </head>
 <body>
@@ -320,7 +111,6 @@
                 const horario = new Date(proximo.horarioAgendado);
                 html += `<div class="proximo-card"><h4>🎯 PRÓXIMO DA FILA</h4>
                     <div class="nome">${proximo.nomeCliente}</div>
-                    <div>📱 ${formatarTelefone(proximo.telefoneCliente || '')}</div>
                     <div>📋 ${proximo.assunto}</div>
                     <div>📅 ${horario.toLocaleDateString('pt-BR')} às ${horario.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</div>
                     <div>👤 Ligador: ${proximo.vulgo}</div>
@@ -336,7 +126,7 @@
                     const statusIcon = f.status === 'em_andamento' ? '🔵' : '🟡';
                     html += `<div class="fila-item-ligador"><span class="posicao">${idx+1}º</span>
                         <strong>${f.nomeCliente}</strong> - ${f.assunto}<br>
-                        <span style="font-size:11px;color:#666;">📱 ${formatarTelefone(f.telefoneCliente || '')} | 📅 ${horario.toLocaleDateString('pt-BR')} ${horario.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})} ${statusIcon} ${f.status === 'em_andamento' ? 'Em andamento' : 'Aguardando'}</span>
+                        <span style="font-size:11px;color:#666;">📅 ${horario.toLocaleDateString('pt-BR')} ${horario.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})} ${statusIcon} ${f.status === 'em_andamento' ? 'Em andamento' : 'Aguardando'}</span>
                     </div>`;
                 });
                 html += `</div></div>`;
@@ -348,7 +138,7 @@
                     const horario = new Date(f.horarioAgendado);
                     html += `<div class="fila-item-encerrado">
                         <strong>${f.nomeCliente}</strong> - ${f.assunto}<br>
-                        <span style="font-size:11px;color:#666;">📱 ${formatarTelefone(f.telefoneCliente || '')} | 📅 ${horario.toLocaleDateString('pt-BR')}</span>
+                        <span style="font-size:11px;color:#666;">📅 ${horario.toLocaleDateString('pt-BR')}</span>
                     </div>`;
                 });
                 html += `</div>`;
