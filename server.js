@@ -1,16 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-const db = new sqlite3.Database('./atendimentos.db');
+// Banco de dados em memória para teste (alternativa mais leve)
+// Se quiser persistência, usar SQLite normal
+const db = new sqlite3.Database(':memory:');
 
+// Criar tabela
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS fichas (
@@ -30,6 +34,9 @@ db.serialize(() => {
     )
   `);
 });
+
+// Para persistência no Render (usando disco temporário)
+// const db = new sqlite3.Database('/tmp/atendimentos.db');
 
 const clients = [];
 
@@ -64,6 +71,7 @@ app.post('/api/fichas', (req, res) => {
   const { nomeCliente, telefoneCliente, assunto, nomeGerente, horarioAgendado, vulgo, zap } = req.body;
   const horarioChegada = new Date().toISOString();
   const status = 'aguardando';
+  
   db.run(
     `INSERT INTO fichas (nomeCliente, telefoneCliente, assunto, nomeGerente, horarioAgendado, vulgo, zap, status, horarioChegada, observacao, atendidoPor, dataEncerramento)
      VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
@@ -133,8 +141,6 @@ app.get('/api/relatorio', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🔥 Servidor rodando em http://localhost:${PORT}`);
-  console.log(`📡 Ligador: http://localhost:${PORT}/ligador.html`);
-  console.log(`👑 Gerente: http://localhost:${PORT}/gerente.html`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🔥 Servidor rodando na porta ${PORT}`);
 });
