@@ -33,6 +33,7 @@
         .posicao { display: inline-block; width: 28px; height: 28px; background: #CC092F; color: white; border-radius: 50%; text-align: center; line-height: 28px; font-size: 12px; font-weight: bold; margin-right: 10px; }
         .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #27ae60; color: white; padding: 12px; border-radius: 12px; text-align: center; z-index: 9999; }
         .status-online { position: fixed; top: 10px; right: 10px; background: #27ae60; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; z-index: 1000; }
+        .observacao-texto { font-size: 11px; color: #27ae60; margin-top: 4px; display: block; }
         @media (max-width: 768px) { body { padding: 10px; } .stat-number { font-size: 22px; } }
     </style>
 </head>
@@ -127,6 +128,7 @@
                     html += `<div class="fila-item-encerrado">
                         <strong>${f.nomeCliente}</strong> - ${f.assunto}<br>
                         <span style="font-size:11px;color:#666;">📅 ${horario.toLocaleDateString('pt-BR')}</span>
+                        ${f.observacao ? `<br><span class="observacao-texto">📝 ${f.observacao}</span>` : ''}
                     </div>`;
                 });
                 html += `</div>`;
