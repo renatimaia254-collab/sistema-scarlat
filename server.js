@@ -36,8 +36,7 @@ db.serialize(() => {
 });
 
 // Para persistência no Render (usando disco temporário)
-// const db = new sqlite3.Database('/tmp/atendimentos.db');
-
+const db = new sqlite3.Database('/opt/render/project/src/data/atendimentos.db');
 const clients = [];
 
 app.get('/api/events', (req, res) => {
