@@ -7,34 +7,41 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        .dashboard { max-width: 1200px; margin: 0 auto; display: flex; gap: 20px; flex-wrap: wrap; }
-        .form-col, .fila-col { flex: 1; min-width: 280px; }
+        .dashboard { max-width: 1400px; margin: 0 auto; display: flex; gap: 20px; flex-wrap: wrap; }
+        .form-col { flex: 1; min-width: 320px; }
+        .fila-col { flex: 2; min-width: 500px; }
         .card { background: white; border-radius: 28px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .header { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 20px; text-align: center; }
         .header-fila { background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%); color: white; padding: 20px; text-align: center; }
         .logo { font-size: 48px; }
+        .header h1, .header-fila h1 { font-size: clamp(18px, 5vw, 24px); }
         .form-body { padding: 20px; }
         .form-group { margin-bottom: 15px; }
         label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 14px; color: #333; }
         input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 14px; font-size: 16px; }
         input:focus { outline: none; border-color: #CC092F; }
         button { width: 100%; background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .status-fila { background: #f8f9fa; padding: 16px; border-radius: 20px; margin-bottom: 16px; }
-        .stats { display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; }
-        .stat-box { text-align: center; flex: 1; padding: 12px; background: white; border-radius: 16px; }
-        .stat-number { font-size: 28px; font-weight: bold; color: #CC092F; }
-        .stat-label { font-size: 11px; color: #666; }
-        .proximo-card { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 16px; border-radius: 16px; margin-top: 16px; }
-        .proximo-card .nome { font-size: 18px; font-weight: bold; }
-        .lista-fila { max-height: 350px; overflow-y: auto; }
-        .lista-encerrados { margin-top: 20px; border-top: 2px solid #ddd; padding-top: 15px; }
-        .fila-item-ligador { background: white; border-left: 4px solid #CC092F; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; }
-        .fila-item-encerrado { background: #f0f0f0; border-left: 4px solid #27ae60; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; opacity: 0.8; }
-        .posicao { display: inline-block; width: 28px; height: 28px; background: #CC092F; color: white; border-radius: 50%; text-align: center; line-height: 28px; font-size: 12px; font-weight: bold; margin-right: 10px; }
-        .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #27ae60; color: white; padding: 12px; border-radius: 12px; text-align: center; z-index: 9999; }
+        
+        /* Estilos da lista de agendamentos */
+        .agenda-dia { margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; background: white; }
+        .dia-header { background: linear-gradient(135deg, #CC092F 0%, #8B0620 100%); color: white; padding: 12px 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .dia-header-finalizados { background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%); color: white; padding: 12px 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .dia-fichas { padding: 12px; background: #fafafa; }
+        .fila-item { background: white; border-left: 6px solid #CC092F; padding: 12px; margin-bottom: 10px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .fila-item-encerrado { background: #f5f5f5; border-left: 6px solid #27ae60; padding: 12px; margin-bottom: 10px; border-radius: 12px; opacity: 0.9; }
+        .status-aguardando { color: #e67e22; font-weight: bold; background: #fff3e0; padding: 2px 8px; border-radius: 12px; display: inline-block; font-size: 11px; }
+        .status-em_andamento { color: #2980b9; font-weight: bold; background: #e3f2fd; padding: 2px 8px; border-radius: 12px; display: inline-block; font-size: 11px; }
+        .status-encerrado { color: #27ae60; font-weight: bold; background: #e8f5e9; padding: 2px 8px; border-radius: 12px; display: inline-block; font-size: 11px; }
+        .badge-horario { background: #CC092F; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 8px; display: inline-block; }
+        .observacao-texto { font-size: 11px; color: #27ae60; margin-top: 6px; padding-top: 4px; border-top: 1px dashed #ddd; display: block; }
+        .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #27ae60; color: white; padding: 12px; border-radius: 12px; text-align: center; z-index: 9999; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .status-online { position: fixed; top: 10px; right: 10px; background: #27ae60; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; z-index: 1000; }
-        .observacao-texto { font-size: 11px; color: #27ae60; margin-top: 4px; display: block; }
-        @media (max-width: 768px) { body { padding: 10px; } .stat-number { font-size: 22px; } }
+        .stats-resumo { background: #f8f9fa; padding: 12px; border-radius: 16px; margin-bottom: 16px; display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; }
+        .stat-box { text-align: center; flex: 1; padding: 10px; background: white; border-radius: 12px; min-width: 80px; }
+        .stat-number { font-size: 24px; font-weight: bold; color: #CC092F; }
+        .stat-label { font-size: 11px; color: #666; }
+        @media (max-width: 768px) { body { padding: 10px; } .dashboard { flex-direction: column; } .fila-col { min-width: auto; } }
     </style>
 </head>
 <body>
@@ -59,83 +66,153 @@
         </div>
         <div class="fila-col">
             <div class="card">
-                <div class="header-fila"><div class="logo">📊</div><h1>Status da Fila</h1><p>Atualização em tempo real</p></div>
-                <div class="form-body"><div id="filaStatus"></div></div>
+                <div class="header-fila"><div class="logo">📊</div><h1>Todos os Agendamentos</h1><p>Atualização em tempo real</p></div>
+                <div class="form-body">
+                    <div id="filaStatus"></div>
+                </div>
             </div>
         </div>
     </div>
     <script>
-        let fichas = [], eventSource = null;
+        let fichas = [];
+        let eventSource = null;
 
         function connectSSE() {
             if (eventSource) eventSource.close();
             eventSource = new EventSource('/api/events');
-            eventSource.onopen = () => { document.getElementById('statusIndicator').innerHTML = '🟢 Tempo Real'; document.getElementById('statusIndicator').style.background = '#27ae60'; };
+            eventSource.onopen = () => {
+                document.getElementById('statusIndicator').innerHTML = '🟢 Tempo Real';
+                document.getElementById('statusIndicator').style.background = '#27ae60';
+            };
             eventSource.addEventListener('nova-ficha', () => carregarDados());
             eventSource.addEventListener('status-alterado', () => carregarDados());
             eventSource.addEventListener('ficha-excluida', () => carregarDados());
-            eventSource.onerror = () => { document.getElementById('statusIndicator').innerHTML = '🔴 Desconectado'; document.getElementById('statusIndicator').style.background = '#e74c3c'; setTimeout(connectSSE, 3000); };
+            eventSource.onerror = () => {
+                document.getElementById('statusIndicator').innerHTML = '🔴 Desconectado';
+                document.getElementById('statusIndicator').style.background = '#e74c3c';
+                setTimeout(connectSSE, 3000);
+            };
         }
 
         async function carregarDados() {
-            try { const response = await fetch('/api/fichas'); fichas = await response.json(); renderizarStatusFila(); } 
-            catch (error) { console.error('Erro:', error); }
+            try {
+                const response = await fetch('/api/fichas');
+                fichas = await response.json();
+                renderizarAgendamentos();
+            } catch (error) {
+                console.error('Erro ao carregar:', error);
+            }
         }
 
-        function renderizarStatusFila() {
+        function formatarDataBR(dataISO) {
+            const [ano, mes, dia] = dataISO.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function formatarHorario(dataISO) {
+            const data = new Date(dataISO);
+            return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function renderizarAgendamentos() {
             const container = document.getElementById('filaStatus');
-            const naoEncerrados = fichas.filter(f => f.status !== 'encerrado');
-            const encerrados = fichas.filter(f => f.status === 'encerrado');
-            const filaOrdenada = [...naoEncerrados].sort((a,b) => { const d = new Date(a.horarioAgendado) - new Date(b.horarioAgendado); if (d !== 0) return d; return a.id - b.id; });
-            const total = filaOrdenada.length;
-            const proximo = filaOrdenada[0] || null;
-            
-            let html = `<div class="status-fila"><div class="stats">
-                <div class="stat-box"><div class="stat-number">${total}</div><div class="stat-label">Total na fila</div></div>
-                <div class="stat-box"><div class="stat-number">${filaOrdenada.filter(f => f.status === 'em_andamento').length}</div><div class="stat-label">Em atendimento</div></div>
-                <div class="stat-box"><div class="stat-number">${filaOrdenada.filter(f => f.status === 'aguardando').length}</div><div class="stat-label">Aguardando</div></div>
-            </div>`;
-            
-            if (proximo) {
-                const horario = new Date(proximo.horarioAgendado);
-                html += `<div class="proximo-card"><h4>🎯 PRÓXIMO DA FILA</h4>
-                    <div class="nome">${proximo.nomeCliente}</div>
-                    <div>📋 ${proximo.assunto}</div>
-                    <div>📅 ${horario.toLocaleDateString('pt-BR')} às ${horario.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</div>
-                    <div>👤 Ligador: ${proximo.vulgo}</div>
-                </div>`;
-            } else {
-                html += `<div class="proximo-card" style="background:#666"><h4>✅ Nenhum cliente na fila</h4></div>`;
+            if (!container) return;
+
+            if (fichas.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:40px;">✅ Nenhum agendamento encontrado</div>';
+                return;
             }
-            
-            if (filaOrdenada.length > 0) {
-                html += `<div style="margin-top:20px"><h3>📋 Fila completa:</h3><div class="lista-fila">`;
-                filaOrdenada.forEach((f, idx) => {
-                    const horario = new Date(f.horarioAgendado);
-                    const statusIcon = f.status === 'em_andamento' ? '🔵' : '🟡';
-                    html += `<div class="fila-item-ligador"><span class="posicao">${idx+1}º</span>
-                        <strong>${f.nomeCliente}</strong> - ${f.assunto}<br>
-                        <span style="font-size:11px;color:#666;">📅 ${horario.toLocaleDateString('pt-BR')} ${horario.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})} ${statusIcon} ${f.status === 'em_andamento' ? 'Em andamento' : 'Aguardando'}</span>
-                    </div>`;
-                });
-                html += `</div></div>`;
+
+            // Agrupar por data
+            const grupos = {};
+            fichas.forEach(f => {
+                const data = f.horarioAgendado.split('T')[0];
+                if (!grupos[data]) grupos[data] = [];
+                grupos[data].push(f);
+            });
+
+            const datasOrdenadas = Object.keys(grupos).sort().reverse(); // Mais recentes primeiro
+
+            // Calcular estatísticas
+            const totalPendentes = fichas.filter(f => f.status !== 'encerrado').length;
+            const totalFinalizados = fichas.filter(f => f.status === 'encerrado').length;
+
+            let html = `
+                <div class="stats-resumo">
+                    <div class="stat-box"><div class="stat-number">${fichas.length}</div><div class="stat-label">Total</div></div>
+                    <div class="stat-box"><div class="stat-number">${totalPendentes}</div><div class="stat-label">Pendentes</div></div>
+                    <div class="stat-box"><div class="stat-number">${totalFinalizados}</div><div class="stat-label">Finalizados</div></div>
+                </div>
+            `;
+
+            for (const data of datasOrdenadas) {
+                const agendamentos = grupos[data];
+                const pendentes = agendamentos.filter(f => f.status !== 'encerrado');
+                const finalizados = agendamentos.filter(f => f.status === 'encerrado');
+
+                // Seção de PENDENTES
+                if (pendentes.length > 0) {
+                    html += `
+                        <div class="agenda-dia">
+                            <div class="dia-header" onclick="toggleDia('pendentes-${data}')">
+                                📅 ${formatarDataBR(data)} - Pendentes/Em andamento
+                                <span>🟡 ${pendentes.length}</span>
+                            </div>
+                            <div class="dia-fichas" id="pendentes-${data}" style="display: block;">
+                    `;
+                    pendentes.sort((a,b) => new Date(a.horarioAgendado) - new Date(b.horarioAgendado))
+                        .forEach(f => {
+                            let statusClass = f.status === 'aguardando' ? 'status-aguardando' : 'status-em_andamento';
+                            let statusText = f.status === 'aguardando' ? '🟡 Aguardando' : '🔵 Em andamento';
+                            html += `
+                                <div class="fila-item">
+                                    <strong>${f.nomeCliente}</strong>
+                                    <span class="badge-horario">📅 ${formatarHorario(f.horarioAgendado)}</span>
+                                    <br>📋 ${f.assunto}
+                                    <br>👤 Ligador: ${f.vulgo}
+                                    <br><span class="${statusClass}">${statusText}</span>
+                                </div>
+                            `;
+                        });
+                    html += `</div></div>`;
+                }
+
+                // Seção de FINALIZADOS
+                if (finalizados.length > 0) {
+                    html += `
+                        <div class="agenda-dia">
+                            <div class="dia-header-finalizados" onclick="toggleDia('finalizados-${data}')">
+                                ✅ ${formatarDataBR(data)} - Finalizados
+                                <span>✅ ${finalizados.length}</span>
+                            </div>
+                            <div class="dia-fichas" id="finalizados-${data}" style="display: block;">
+                    `;
+                    finalizados.sort((a,b) => new Date(a.horarioAgendado) - new Date(b.horarioAgendado))
+                        .forEach(f => {
+                            html += `
+                                <div class="fila-item-encerrado">
+                                    <strong>${f.nomeCliente}</strong>
+                                    <span class="badge-horario">📅 ${formatarHorario(f.horarioAgendado)}</span>
+                                    <br>📋 ${f.assunto}
+                                    <br>👤 Ligador: ${f.vulgo}
+                                    <br><span class="status-encerrado">✅ Encerrado</span>
+                                    ${f.observacao ? `<br><span class="observacao-texto">📝 ${f.observacao}</span>` : ''}
+                                </div>
+                            `;
+                        });
+                    html += `</div></div>`;
+                }
             }
-            
-            if (encerrados.length > 0) {
-                html += `<div class="lista-encerrados"><h3>✅ Finalizados (${encerrados.length})</h3>`;
-                encerrados.slice(-10).reverse().forEach(f => {
-                    const horario = new Date(f.horarioAgendado);
-                    html += `<div class="fila-item-encerrado">
-                        <strong>${f.nomeCliente}</strong> - ${f.assunto}<br>
-                        <span style="font-size:11px;color:#666;">📅 ${horario.toLocaleDateString('pt-BR')}</span>
-                        ${f.observacao ? `<br><span class="observacao-texto">📝 ${f.observacao}</span>` : ''}
-                    </div>`;
-                });
-                html += `</div>`;
-            }
-            html += `</div>`;
+
             container.innerHTML = html;
         }
+
+        window.toggleDia = function(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            }
+        };
 
         function showToast(msg, isError = false) {
             const toast = document.createElement('div');
@@ -163,9 +240,15 @@
             
             try {
                 const response = await fetch('/api/fichas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(novaFicha) });
-                if (response.ok) { document.getElementById('formLigador').reset(); showToast('✅ Cliente agendado!'); } 
-                else { showToast('❌ Erro ao agendar', true); }
-            } catch (error) { showToast('❌ Erro de conexão', true); }
+                if (response.ok) { 
+                    document.getElementById('formLigador').reset(); 
+                    showToast('✅ Cliente agendado!'); 
+                } else { 
+                    showToast('❌ Erro ao agendar', true); 
+                }
+            } catch (error) { 
+                showToast('❌ Erro de conexão', true); 
+            }
         });
 
         connectSSE();
